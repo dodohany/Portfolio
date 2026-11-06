@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project | Demiana Hany Nabil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav><div class="wrap ptop">
+ <a class="logo" href="index.html" aria-label="Home">DHN<i>.</i></a>
+ <a class="back" href="index.html#projects">&#8592; All projects</a>
+</div></nav>
+
+<main class="wrap" id="page"></main>
+
+<footer class="contact" id="contact"><div class="wrap">
+ <h3>Let’s Create Something Impactful Together.</h3>
+ <div class="info">
+  <a href="mailto:dineamahany@gmail.com">dineamahany@gmail.com</a>
+  <a href="tel:+201206778754">+20 1206778754</a>
+  <span>Cairo, Egypt</span>
+ </div>
+</div></footer>
+
+<div class="lb" id="lb" role="dialog" aria-label="Screenshot"><img alt=""></div>
+
+<script src="data.js"></script>
+<script>
+const id=new URLSearchParams(location.search).get("id");
+let i=PROJECTS.findIndex(p=>p.id===id);if(i<0)i=0;
+const p=PROJECTS[i],prev=PROJECTS[(i+PROJECTS.length-1)%PROJECTS.length],next=PROJECTS[(i+1)%PROJECTS.length];
+document.title=p.name+" | Demiana Hany Nabil";
+
+const meta=[["Industry",p.cat],["Period",p.period],["My role",p.role]].filter(r=>r[1]).map(r=>`<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join("");
+const list=a=>`<ul>${a.map(x=>`<li>${x}</li>`).join("")}</ul>`;
+const chips=(a,t)=>a.length?`<h3 class="sub">${t}</h3><div class="chips">${a.map(x=>`<span>${x}</span>`).join("")}</div>`:"";
+
+document.getElementById("page").innerHTML=`
+<section class="phero">
+ <div class="cover ${p.cls}"${tst(p)}>${vis(p)}</div>
+ <div>
+  <div class="cat">${p.cat}</div>
+  <h1>${p.name}</h1>
+  <dl class="meta">${meta}</dl>
+  ${p.url?`<a class="btn" href="${p.url}" target="_blank" rel="noopener">Visit the page</a>`:""}
+  <a class="btn ghost" href="#contact">Start a project</a>
+ </div>
+</section>
+
+<section style="padding:20px 0 10px">
+ <h2>Results</h2>
+ <div class="kv">${p.stats.map(s=>`<div><b>${s[0]}</b><span>${s[1]}</span></div>`).join("")}</div>
+ ${p.note?`<p class="note">${p.note}</p>`:""}
+</section>
+
+<section style="padding:30px 0 10px">
+ <div class="two">
+  <div><h2>What I did</h2>${list(p.did)}</div>
+  <div>
+   ${p.challenge?`<h2>The challenge</h2><p>${p.challenge}</p>`:""}
+   ${chips(p.plan,"Monthly content plan")}
+   ${chips(p.reels.map(r=>`<b>${r}</b> views`),"Selected Reels performance")}
+   ${p.ads?`<h3 class="sub">Advertising</h3><p>${p.ads}</p>`:""}
+  </div>
+ </div>
+</section>
+
+<section style="padding:30px 0 10px">
+ <h2>Screenshots &amp; samples</h2>
+ <div class="gal">${p.imgs.map((s,n)=>`<button data-src="${s}" aria-label="Enlarge screenshot ${n+1}"><img src="${s}" alt="${p.name} screenshot ${n+1}" loading="lazy"></button>`).join("")}</div>
+ <div class="pn">
+  <a class="btn ghost sm" href="project.html?id=${prev.id}">&#8592; ${prev.name}</a>
+  <a class="btn ghost sm" href="project.html?id=${next.id}">${next.name} &#8594;</a>
+ </div>
+</section>
+
+<section>
+ <h2>Showreel</h2>
+ <div class="strip"><div class="track">${PROJECTS.map(q=>`<a class="sr" href="project.html?id=${q.id}" aria-current="${q.id===p.id}"><span class="tile ${q.cls}"${tst(q)}>${vis(q)}</span><b>${q.name}</b><em>${q.cat}</em></a>`).join("")}</div></div>
+</section>`;
+
+const lb=document.getElementById("lb"),lbi=lb.querySelector("img");
+document.querySelectorAll(".gal button").forEach(b=>b.onclick=()=>{lbi.src=b.dataset.src;lb.classList.add("open")});
+lb.onclick=()=>lb.classList.remove("open");
+document.addEventListener("keydown",e=>{if(e.key==="Escape")lb.classList.remove("open")});
+</script>
+</body>
+</html>
